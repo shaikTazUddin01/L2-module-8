@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connect, Aggregate } from 'mongoose';
 import Student, {
   Guardian,
   LocalGuardian,
@@ -186,9 +186,20 @@ studentSchema.post('save', function (doc, next) {
 
 //query middlewware
 studentSchema.pre('find', function (next) {
-  console.log(this);
+  // console.log(this);
+this.find({isDeleted : {$ne: true}})
+  next()
+});
+studentSchema.pre('findOne', function (next) {
+  // console.log(this);
+this.find({isDeleted : {$ne: true}})
+  next()
 });
 
+studentSchema.pre('aggregate',function(next){
+this.pipeline().unshift({$match:{isDeleted:{$ne:true}}});
+  next()
+})
 // Create model
 
 const StudentModel = model<Student>('Student', studentSchema);

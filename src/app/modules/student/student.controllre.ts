@@ -64,6 +64,7 @@ const getSingleStudent = async (req: Request, res: Response) => {
     const { studentId } = req.params;
 
     const result = await StudentServices.getSingleStudentsFromDb(studentId);
+    // const result = await StudentServices.getSingleStudentsFromDb(studentId);
 
     //sent response
     res.status(200).json({

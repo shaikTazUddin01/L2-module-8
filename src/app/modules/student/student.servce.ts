@@ -14,7 +14,8 @@ const getAllStudentsFromDb = async () => {
 };
 
 const getSingleStudentsFromDb = async (id: string) => {
-  const result = await StudentModel.findOne({ id });
+  const result = await StudentModel.aggregate([{$match:{id : id}}]);
+  // const result = await StudentModel.findOne({ id });
 
   return result;
 };
