@@ -2,22 +2,28 @@ import { Request, Response } from 'express';
 import { StudentServices } from './student.servce';
 import Joi from 'joi';
 import { studentValidationSchema } from './student.vaildation';
+import { z } from 'zod';
+import studentZodValidation from './student.zod.validation';
 
 const crateStudent = async (req: Request, res: Response) => {
   try {
     const { student: studentData } = req.body;
 
-    const { error } = studentValidationSchema.validate(studentData);
+    // data validation using joi
+    // const { error, value } = studentValidationSchema.validate(studentData);
     // console.log({error}, {value});
-    const result = await StudentServices.createStudentIntoDB(studentData);
+    // if (error) {
+    //   res.status(500).json({
+    //     success: false,
+    //     message: 'student is created successfully',
+    //     error: error.details,
+    //   });
+    // }
+    //zod validation
 
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message: 'student is created successfully',
-        error: error.details,
-      });
-    }
+    const zodStudent = studentZodValidation.parse(studentData);
+
+    const result = await StudentServices.createStudentIntoDB(zodStudent);
 
     //sent response
     res.status(200).json({

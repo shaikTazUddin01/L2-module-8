@@ -5,13 +5,15 @@ import Student, {
   LocalGuardian,
   UserName,
 } from './seudent.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
-    maxlength: [20, 'first name max length 20 character'],
-    trim: true,
+    // required: [true, 'First name is required'],
+    // maxlength: [20, 'first name max length 20 character'],
+    // trim: true,
     // validate: {
     //   validator: function (value: string) {
     //     const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
@@ -23,7 +25,7 @@ const userNameSchema = new Schema<UserName>({
     //     } else {
     //       return false;
     //     }
-        // return ;
+    // return ;
     //   },
     //   message: '{VALUE} is not capitalized',
     // },
@@ -36,8 +38,8 @@ const userNameSchema = new Schema<UserName>({
     type: String,
     required: [true, 'Last name is required'],
     validate: {
-      validator: (value:string) =>validator.isAlpha(value),
-      message:'{VALUE} is not valid'
+      validator: (value: string) => validator.isAlpha(value),
+      message: '{VALUE} is not valid',
     },
   },
 });
@@ -93,6 +95,10 @@ const studentSchema = new Schema<Student>({
     type: String,
     // unique: true ,
     // message:"Id Must be unique",
+  },
+  password: {
+    type: String,
+    required: [true, 'password is required'],
   },
   name: {
     type: userNameSchema,
@@ -157,6 +163,19 @@ const studentSchema = new Schema<Student>({
     },
     default: 'active',
   },
+});
+
+//pre middleware
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'pre student data');
+  const user = this;
+  user.password = await bcrypt.hash(user.password, Number(config.salt_round));
+  next();
+});
+
+//post middleware
+studentSchema.post('save', function () {
+  console.log(this, 'this is post middleware');
 });
 
 // Create model
