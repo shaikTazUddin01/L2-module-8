@@ -163,6 +163,10 @@ const studentSchema = new Schema<Student>({
     },
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 //pre middleware
@@ -174,8 +178,15 @@ studentSchema.pre('save', async function (next) {
 });
 
 //post middleware
-studentSchema.post('save', function () {
-  console.log(this, 'this is post middleware');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  // console.log(this, 'this is post middleware');
+  next();
+});
+
+//query middlewware
+studentSchema.pre('find', function (next) {
+  console.log(this);
 });
 
 // Create model

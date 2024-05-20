@@ -1,31 +1,33 @@
-import Student from "./seudent.interface";
-import StudentModel from "./student.model";
+import Student from './seudent.interface';
+import StudentModel from './student.model';
 
+const createStudentIntoDB = async (student: Student) => {
+  const result = await StudentModel.create(student);
 
+  return result;
+};
 
-const createStudentIntoDB = async (student: Student)=>{
-  const result =  await StudentModel.create(student)
+const getAllStudentsFromDb = async () => {
+  const result = await StudentModel.find();
 
-  return result
-}
+  return result;
+};
 
-const getAllStudentsFromDb=async()=>{
-  const result =await StudentModel.find();
+const getSingleStudentsFromDb = async (id: string) => {
+  const result = await StudentModel.findOne({ id });
 
-  return result
-}
+  return result;
+};
 
-const getSingleStudentsFromDb=async(id:string)=>{
-  const result =await StudentModel.findOne({id});
+const deleteSutdentFromDb = async (id: string) => {
+  const result = await StudentModel.updateOne({ id }, { isDeleted: true });
 
-  return result
-}
+  return result;
+};
 
-
-
-
-export const StudentServices ={
-    createStudentIntoDB,
-    getAllStudentsFromDb,
-    getSingleStudentsFromDb
-}
+export const StudentServices = {
+  createStudentIntoDB,
+  getAllStudentsFromDb,
+  getSingleStudentsFromDb,
+  deleteSutdentFromDb,
+};

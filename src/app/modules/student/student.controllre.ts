@@ -51,7 +51,11 @@ const getAllStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error,
+      error: error,
+    });
   }
 };
 
@@ -68,7 +72,30 @@ const getSingleStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error,
+      error: error,
+    });
+  }
+};
+
+const deleteStudent = async (req: Request, res: Response) => {
+  try {
+    const { studentId } = req.params;
+    const result = await StudentServices.deleteSutdentFromDb(studentId);
+
+    res.status(200).json({
+      success:true,
+      message:'student delete successFully',
+      data:result
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error,
+      error: error,
+    });
   }
 };
 
@@ -76,4 +103,5 @@ export const StudentControllers = {
   crateStudent,
   getAllStudent,
   getSingleStudent,
+  deleteStudent
 };
